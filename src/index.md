@@ -14,7 +14,8 @@
   <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
   <script>
     // Your code is going to go here
-    const App = () => {React.createElement(
+    const App = () => {
+      return React.createElement(
         "div",
         {},//this is placeholder for id, class etc html attributes
         React.createElement("h1",{},"Adopt-Me")
