@@ -1,77 +1,88 @@
-import { useState ,useEffect } from "react";
-import Pet from './Pet.jsx';
-const Animals = ['dog','cats','rabbit','reptile'];
+import { useEffect, useState } from "react";
+import Result from "./Results";
+import useBreedList from "./useBreedList";
+const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"];
 
-const SearchParams = ()=>{
-    const [location,setLocation] = useState("");
-    const [animal,setAnimal]=useState("");
-    const [breed,setBreed] = useState("");
-    const [pets,setPet] = useState([]);
-    const breeds=[];
+const SearchParams = () => {
+  const [pets, setPets] = useState([]);
+  const [location, setLocation] = useState("");
+  const [animal, setAnimal] = useState("");
+  const [breed, setBreed] = useState("");
+  const [breeds] = useBreedList(animal);
 
-    useEffect(()=> {
-        requestPets();
-    },[]);
+  useEffect(() => {
+    requestPets();
+  
+  }, []); 
 
-    async function requestPets(){
-        const pet = await fetch(`
-        http://pets-v2.dev-apis.com/pets?animals=${animal}&location=${location}&breed=${breed}`);
+  async function requestPets() {
+    const res = await fetch(
+      `http://pets-v2.dev-apis.com/pets?animal=${animal}&location=${location}&breed=${breed}`
+    );
+    const json = await res.json();
 
-        const json = await pet.json();
+    setPets(json.pets);
+  }
 
-        setPet(json.pets);
-    }
+  return (
+    <div className="search-params">
+      <form >
+        <label htmlFor="location">
+          Location
+          <input
+            id="location"
+            value={location}
+            placeholder="Location"
+            onChange={(e) => setLocation(e.target.value)}
+          />
+        </label>
 
-    return(
-        <div className="search-params">
-            <form onSubmit={(e)=> {
-                e.preventDefault();
-                requestPets();
-            }}>
-                <label htmlFor="location">
-                    Location
-                    <input onChange={(e)=> setLocation(e.target.value)} type="text" id="location" placeholder="location" value={location} />
-                </label>
+        <label htmlFor="animal">
+          Animal
+          <select
+            id="animal"
+            value={animal}
+            onChange={(e) => {
+              setAnimal(e.target.value);
+              setBreed("");
+            }}
+            onBlur={(e) => {
+              setAnimal(e.target.value);
+              setBreed("");
+            }}
+          >
+            <option />
+            {ANIMALS.map((animal) => (
+              <option key={animal} value={animal}>
+                {animal}
+              </option>
+            ))}
+          </select>
+        </label>
 
-                
-                <label htmlFor="animal">
-                    Animal
-                    <select onChange={(e)=> {setAnimal(e.target.value); setBreed("") }} id='animal' placeholder="animal" value={animal} >
-                
+        <label htmlFor="breed">
+          Breed
+          <select
+            disabled={!breeds.length}
+            id="breed"
+            value={breed}
+            onChange={(e) => setBreed(e.target.value)}
+            onBlur={(e) => setBreed(e.target.value)}
+          >
+            <option />
+            {breeds.map((breed) => (
+              <option key={breed} value={breed}>
+                {breed}
+              </option>
+            ))}
+          </select>
+        </label>
 
-                <option/>
-                {
-                    Animals.map((animal) => (
-                        <option key={animal}>{animal}</option>
-                    ))
-                }
-                
-                </select>
-                </label>
-
-                <label htmlFor="breed">
-                    Breed
-                    <select onChange={(e)=> {setBreed(e.target.value);}} id='breed' disabled={breeds.length == 0} placeholder="breed" value={breed} >
-                
-
-                <option/>
-                {
-                    Animals.map((breed) => (
-                        <option key={breed}>{breed}</option>
-                    ))
-                }
-                
-                </select>
-                </label>
-                <button>Submit</button>
-            </form>
-                {
-                    pets.map( (pet) => (
-                        <Pet name={pet.name} animal={pet.animal} breed={pet.breed} key={pet.id}/>
-                    ))
-                }
-        </div>
-    )
-}
+        <button>Submit</button>
+      </form>
+      <Result pets={pets} />
+    </div>
+  );
+};
 
 export default SearchParams;
