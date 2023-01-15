@@ -41,7 +41,7 @@ const App = () => {
   return (
     <div>
        <h1>Adopt-me</h1>
-      <SearchParams></SearchParams>
+      <SearchParams/>
       {/*<Pet name ="Luna" animal="Dog" breed="Dashund"/>
       <Pet name ="max" animal="Bird" breed="Beagle"/>
       <Pet name ="Kasa" animal="Rajath" breed="Human"/> */}
