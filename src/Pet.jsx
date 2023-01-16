@@ -6,6 +6,8 @@
 //     ]);
 //   };
 
+import { Link } from "react-router-dom";
+
 // const Pet = (props) => {
 //     return(
 //         <div>
@@ -19,13 +21,13 @@
 const Pet = ({name,animal,breed,images,location,id}) =>{
 
     let hero = "http://pets-images.dev-apis.com/pets/none.jpg";
-    console.log(images);
-    if(images){
+    // console.log(images);
+    if(images.length){
         hero = images[0];
     }
 
     return (
-        <a href={`/details/${id}`} className="pet" >
+        <Link to={`/details/${id}`} className="pet" >
         <div className="image-container">
             <img src={hero} alt={name} />
         </div>
@@ -35,7 +37,7 @@ const Pet = ({name,animal,breed,images,location,id}) =>{
                 {animal} - {breed} - {location}
             </h2>
         </div>
-        </a>
+        </Link>
     )
 }
 

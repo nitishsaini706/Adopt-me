@@ -1,6 +1,9 @@
 import React from 'react';
+import Details from './Details';
+import { BrowserRouter, Routes,Route ,Link} from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
 import SearchParams from './SearchParams';
+import { QueryClient,QueryClientProvider } from '@tanstack/react-query';
 // import Pet from './Pet';
 
 // const Pet = (props) => {
@@ -35,18 +38,39 @@ import SearchParams from './SearchParams';
 //     }),
 //   ]);
 // };
-
+const queryClient = new QueryClient({
+  defaultOptions:{
+    queries :{
+      staleTime: Infinity,
+      cacheTime:Infinity
+    }
+  }
+});
 const App = () => {
 
   return (
-    <div>
-       <h1>Adopt-me</h1>
-      <SearchParams/>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+
+       <header >
+        <Link to="/">
+        
+          Adopt-me
+        </Link>
+        </header>
+       <Routes>
+        <Route path="/details/:id" element={<Details/>}></Route>
+        <Route path='/' element={<SearchParams/>}></Route>
+
+       </Routes>
+      {/* <SearchParams/> */}
       {/*<Pet name ="Luna" animal="Dog" breed="Dashund"/>
       <Pet name ="max" animal="Bird" breed="Beagle"/>
-      <Pet name ="Kasa" animal="Rajath" breed="Human"/> */}
+    <Pet name ="Kasa" animal="Rajath" breed="Human"/> */}
       
-    </div>
+    
+    </QueryClientProvider>
+    </BrowserRouter>
   )
   
 };
